@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx --yes skills add anthropics/skills --skill frontend-design)"
+    ]
+  }
+}

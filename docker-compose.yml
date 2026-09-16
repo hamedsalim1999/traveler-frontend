@@ -1,0 +1,22 @@
+# Local container run of the built frontend, served by nginx.
+#
+# The API is called from the *browser*, not from inside this container, so
+# API_URL just needs to be reachable from wherever you open the page —
+# it does not need to share a Docker network with traveler-backend.
+#
+# Usage:
+#   1. cp .env.example .env
+#   2. docker compose up --build
+#   3. open http://localhost:${WEB_PORT:-3000}
+
+services:
+  web:
+    build:
+      context: .
+      args:
+        VITE_API_URL: ${API_URL:-http://127.0.0.1:8080}
+    restart: unless-stopped
+    environment:
+      API_URL: ${API_URL:-http://127.0.0.1:8080}
+    ports:
+      - "${WEB_PORT:-3000}:8080"
