@@ -1,0 +1,40 @@
+name: Publish to GHCR
+
+# Builds this repo's Dockerfile and pushes it to GitHub Container Registry
+# (ghcr.io/<owner>/traveler-frontend). The image serves the static build via
+# nginx; point it at a backend by setting API_URL at container start (see
+# README.md) — no rebuild needed per environment.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          # GH_SECRET is a GitHub PAT (classic, write:packages scope) saved
+          # as a repo secret. The built-in GITHUB_TOKEN would also work here
+          # (with no PAT to create/rotate) — swap this for
+          # `secrets.GITHUB_TOKEN` if you'd rather not manage a PAT.
+          password: ${{ secrets.GH_SECRET }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/${{ github.repository }}:${{ github.sha }}
