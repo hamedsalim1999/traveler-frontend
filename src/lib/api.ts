@@ -1,4 +1,5 @@
 import { API_URL } from './config';
+import { getToken } from './token';
 import type { ApiErrorBody } from './types';
 
 export class ApiError extends Error {
@@ -12,11 +13,13 @@ export class ApiError extends Error {
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const token = getToken();
   const res = await fetch(`${API_URL}${path}`, {
     ...init,
     headers: {
       ...(init?.body ? { 'Content-Type': 'application/json' } : {}),
       Accept: 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...init?.headers,
     },
   });

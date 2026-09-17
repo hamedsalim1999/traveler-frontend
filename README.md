@@ -1,20 +1,29 @@
 # traveler-frontend
 
-React (Vite + TypeScript + Tailwind CSS) frontend for the travel-planning
-app, talking to [traveler-backend](../traveler-backend)'s API
-(`/places`, `/profiles`, `/trips`, `/trips/:id/comments` — see
-`http://127.0.0.1:8080/swagger/index.html` for the full spec).
+React (Vite + TypeScript + Tailwind CSS) frontend for a leader-led trip
+marketplace, talking to [traveler-backend](../traveler-backend)'s API —
+see `http://127.0.0.1:8080/swagger/index.html` for the full spec. Visual
+design and product structure are modeled on a Lovable prototype
+(trip-trail-connect): a violet-to-blue gradient hero, real accounts,
+published day-by-day itineraries, and a 5%-commission price breakdown.
 
 ## Pages
 
-| Route             | Description                                               |
-| ------------------ | ----------------------------------------------------------- |
-| `/`                | Browse places, filter by continent/tag                    |
-| `/places/:slug`    | Place detail                                               |
-| `/trips`           | Search/filter trips, create a trip                        |
-| `/trips/:id`       | Trip detail — edit/delete, before/after comments           |
-| `/profiles`        | List/filter profiles, create a profile                    |
-| `/profiles/:id`    | Profile detail — bio, trips created, edit/delete           |
+| Route                | Description                                                        |
+| ---------------------- | ---------------------------------------------------------------------- |
+| `/`                   | Marketing landing page — hero, how it works, featured trips          |
+| `/browse`             | Search/filter trips by destination, dates, budget                    |
+| `/trips/new`          | Publish a trip (signed-in leader/both only)                          |
+| `/trips/:id`          | Trip detail — itinerary, reviews, price breakdown, join/leave        |
+| `/profiles/:id`       | Profile detail — bio, rating, trips led, edit/delete (own profile)   |
+| `/become-a-leader`    | Pitch page for leading a trip                                       |
+| `/auth`               | Login / signup (`?mode=signup`, `?next=`, `?type=leader`)            |
+
+Auth is real but intentionally minimal: email/password against the
+backend's bearer-token sessions (`src/lib/auth.tsx`, `src/lib/token.ts`),
+persisted to `localStorage`. There's no Google OAuth (the button is a
+disabled "coming soon" stub, matching the reference site) and no email
+verification or password reset.
 
 ## Local development
 
@@ -105,14 +114,18 @@ public/
 src/
   lib/
     config.ts                      resolves the API base URL (runtime > build-time)
-    api.ts                         typed fetch wrapper
+    api.ts                         typed fetch wrapper, attaches the bearer token
+    auth.tsx                       AuthProvider/useAuth — signup/login/logout state
+    token.ts                       session token storage (localStorage + in-memory)
     types.ts                       API request/response types (mirrors swagger.json)
   features/
-    places/ profiles/ trips/ comments/
+    trips/ profiles/ tripdays/ follows/ reviews/
       api.ts                       React Query hooks per resource
   components/
-    Layout.tsx                     nav + page shell
-    ui/                            Button, Card, Field, StatusView primitives
+    Layout.tsx                     nav (auth-aware) + footer + page shell
+    Hero.tsx                       gradient hero, "how it works", CTA sections
+    TripCard.tsx, TripPhoto.tsx, DifficultyBadge.tsx, StarRating.tsx
+    ui/                             Button, Card, Field, Tabs, Accordion, Skeleton…
   pages/                           one file per route
 Dockerfile                         multi-stage build: node -> nginx-unprivileged
 docker-compose.yml                 local container run

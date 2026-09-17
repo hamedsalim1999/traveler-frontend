@@ -1,18 +1,23 @@
+import { ArrowLeft, Pencil, Trash2 } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
+import { StarRating } from '@/components/StarRating';
 import { Button } from '@/components/ui/Button';
 import { Badge, Card } from '@/components/ui/Card';
 import { Label, Select, TextArea, TextInput } from '@/components/ui/Field';
 import { EmptyView, ErrorView, LoadingView } from '@/components/ui/StatusView';
 import { useDeleteProfile, useProfile, useUpdateProfile } from '@/features/profiles/api';
+import { useAuth } from '@/lib/auth';
 import { errorMessage } from '@/lib/errors';
-import type { ProfileType } from '@/lib/types';
+import { formatPrice } from '@/lib/money';
+import type { ExperienceLevel, ProfileType } from '@/lib/types';
 
 export function ProfileDetailPage() {
   const { id } = useParams<{ id: string }>();
   const profileId = Number(id);
   const navigate = useNavigate();
+  const { profile: signedInProfile } = useAuth();
   const { data: profile, isLoading, error } = useProfile(profileId);
   const deleteProfile = useDeleteProfile();
   const [editing, setEditing] = useState(false);
@@ -21,15 +26,18 @@ export function ProfileDetailPage() {
   if (error) return <ErrorView message={errorMessage(error)} />;
   if (!profile) return null;
 
+  const isOwnProfile = signedInProfile?.id === profile.id;
+
   function handleDelete() {
     if (!confirm(`Delete "${profile!.name}"? This can't be undone.`)) return;
-    deleteProfile.mutate(profileId, { onSuccess: () => navigate('/profiles') });
+    deleteProfile.mutate(profileId, { onSuccess: () => navigate('/') });
   }
 
   return (
-    <div className="max-w-2xl space-y-8">
-      <Link to="/profiles" className="text-sm text-primary hover:underline">
-        ← Back to profiles
+    <div className="mx-auto max-w-2xl space-y-8 px-4 py-10 sm:px-6">
+      <Link to="/browse" className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline">
+        <ArrowLeft className="h-4 w-4" />
+        Back to trips
       </Link>
 
       <Card className="p-6">
@@ -42,18 +50,40 @@ export function ProfileDetailPage() {
         ) : (
           <>
             <div className="flex items-start justify-between gap-4">
-              <div>
-                <Badge className="capitalize">{profile.type}</Badge>
-                <h1 className="mt-2 text-3xl font-bold text-foreground">{profile.name}</h1>
+              <div className="flex items-center gap-4">
+                {profile.avatar_url && (
+                  <img src={profile.avatar_url} alt="" className="h-16 w-16 rounded-full object-cover" />
+                )}
+                <div>
+                  <Badge className="capitalize">{profile.type}</Badge>
+                  <h1 className="mt-2 font-display text-3xl font-bold text-foreground">{profile.name}</h1>
+                  {(profile.experience_level || profile.age) && (
+                    <p className="text-sm capitalize text-muted-foreground">
+                      {[profile.experience_level, profile.age].filter(Boolean).join(' · ')}
+                    </p>
+                  )}
+                  {profile.average_rating != null && (
+                    <div className="mt-1 flex items-center gap-1.5">
+                      <StarRating rating={profile.average_rating} />
+                      <span className="text-xs text-muted-foreground">
+                        {profile.average_rating.toFixed(1)} ({profile.review_count})
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="flex shrink-0 gap-2">
-                <Button variant="secondary" onClick={() => setEditing(true)}>
-                  Edit
-                </Button>
-                <Button variant="danger" onClick={handleDelete} disabled={deleteProfile.isPending}>
-                  Delete
-                </Button>
-              </div>
+              {isOwnProfile && (
+                <div className="flex shrink-0 gap-2">
+                  <Button variant="secondary" size="sm" onClick={() => setEditing(true)}>
+                    <Pencil className="h-4 w-4" />
+                    Edit
+                  </Button>
+                  <Button variant="danger" size="sm" onClick={handleDelete} disabled={deleteProfile.isPending}>
+                    <Trash2 className="h-4 w-4" />
+                    Delete
+                  </Button>
+                </div>
+              )}
             </div>
             <p className="mt-4 text-foreground/80">{profile.bio}</p>
             {deleteProfile.isError && (
@@ -66,9 +96,9 @@ export function ProfileDetailPage() {
       </Card>
 
       <div>
-        <h2 className="mb-3 text-lg font-semibold text-foreground">Trips created</h2>
+        <h2 className="mb-3 font-display text-2xl font-semibold text-foreground">Trips led</h2>
         {profile.travels_created.length === 0 ? (
-          <EmptyView message="Nothing logged yet — trips this profile creates will show up here." />
+          <EmptyView message="Nothing published yet — trips this profile leads will show up here." />
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {profile.travels_created.map((trip) => (
@@ -76,9 +106,12 @@ export function ProfileDetailPage() {
                 <Card className="p-4">
                   <h3 className="font-semibold text-foreground">{trip.title}</h3>
                   <p className="text-sm text-muted-foreground">{trip.destination}</p>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {trip.start_date} → {trip.end_date}
-                  </p>
+                  <div className="mt-1 flex items-center justify-between text-xs text-muted-foreground">
+                    <span>
+                      {trip.start_date} → {trip.end_date}
+                    </span>
+                    <span className="font-medium text-foreground">{formatPrice(trip.price_cents)}</span>
+                  </div>
                 </Card>
               </Link>
             ))}
@@ -94,7 +127,15 @@ function EditProfileForm({
   onSaved,
   onCancel,
 }: {
-  profile: { id: number; name: string; type: ProfileType; bio: string };
+  profile: {
+    id: number;
+    name: string;
+    type: ProfileType;
+    bio: string;
+    experience_level: ExperienceLevel | null;
+    age: number | null;
+    avatar_url: string;
+  };
   onSaved: () => void;
   onCancel: () => void;
 }) {
@@ -102,10 +143,25 @@ function EditProfileForm({
   const [name, setName] = useState(profile.name);
   const [type, setType] = useState<ProfileType>(profile.type);
   const [bio, setBio] = useState(profile.bio);
+  const [experienceLevel, setExperienceLevel] = useState<ExperienceLevel | ''>(
+    profile.experience_level ?? '',
+  );
+  const [age, setAge] = useState(profile.age ?? '');
+  const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url);
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    updateProfile.mutate({ name, type, bio }, { onSuccess: onSaved });
+    updateProfile.mutate(
+      {
+        name,
+        type,
+        bio,
+        experience_level: experienceLevel || null,
+        age: age === '' ? null : Number(age),
+        avatar_url: avatarUrl,
+      },
+      { onSuccess: onSaved },
+    );
   }
 
   return (
@@ -121,6 +177,36 @@ function EditProfileForm({
           <option value="leader">Leader</option>
           <option value="both">Both</option>
         </Select>
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="edit-experience">Experience level</Label>
+          <Select
+            id="edit-experience"
+            value={experienceLevel}
+            onChange={(e) => setExperienceLevel(e.target.value as ExperienceLevel | '')}
+          >
+            <option value="">Not set</option>
+            <option value="beginner">Beginner</option>
+            <option value="medium">Medium</option>
+            <option value="expert">Expert</option>
+          </Select>
+        </div>
+        <div>
+          <Label htmlFor="edit-age">Age</Label>
+          <TextInput
+            id="edit-age"
+            type="number"
+            min={13}
+            max={120}
+            value={age}
+            onChange={(e) => setAge(e.target.value === '' ? '' : Number(e.target.value))}
+          />
+        </div>
+      </div>
+      <div>
+        <Label htmlFor="edit-avatar">Avatar URL</Label>
+        <TextInput id="edit-avatar" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} />
       </div>
       <div>
         <Label htmlFor="edit-bio">Bio</Label>
