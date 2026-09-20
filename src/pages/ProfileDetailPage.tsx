@@ -173,7 +173,7 @@ function EditProfileForm({
       <div>
         <Label htmlFor="edit-type">Type</Label>
         <Select id="edit-type" value={type} onChange={(e) => setType(e.target.value as ProfileType)}>
-          <option value="traveler">Traveler</option>
+          <option value="traveler">Follower</option>
           <option value="leader">Leader</option>
           <option value="both">Both</option>
         </Select>

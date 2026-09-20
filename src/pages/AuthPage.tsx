@@ -127,7 +127,7 @@ export function AuthPage() {
         <p className="mt-4 text-center text-sm text-muted-foreground">
           {mode === 'login' ? (
             <>
-              New to Traveler?{' '}
+              New to Resentravel?{' '}
               <button type="button" onClick={() => setMode('signup')} className="font-medium text-primary hover:underline">
                 Sign up
               </button>
@@ -144,7 +144,7 @@ export function AuthPage() {
       </Card>
 
       <Link to="/" className="mt-6 text-sm text-muted-foreground hover:text-foreground">
-        ← Back to Traveler
+        ← Back to Resentravel
       </Link>
     </div>
   );

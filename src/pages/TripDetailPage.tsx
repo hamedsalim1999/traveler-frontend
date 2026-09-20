@@ -134,7 +134,7 @@ function PriceBreakdown({ trip }: { trip: Trip }) {
           <dd className="text-foreground">{formatPrice(trip.price_cents)}</dd>
         </div>
         <div className="flex justify-between">
-          <dt className="text-muted-foreground">Traveler platform fee (5%)</dt>
+          <dt className="text-muted-foreground">Resentravel platform fee (5%)</dt>
           <dd className="text-foreground">{formatPrice(platformFee)}</dd>
         </div>
         <div className="flex justify-between border-t border-border pt-2 font-semibold">
@@ -177,7 +177,7 @@ function PriceBreakdown({ trip }: { trip: Trip }) {
   );
 }
 
-// Flights/hotels aren't wired to a real pricing API (Traveler's own roadmap
+// Flights/hotels aren't wired to a real pricing API (Resentravel's own roadmap
 // lists this as "coming soon"); numbers are a deterministic estimate from
 // the destination string, clearly labeled as such.
 function FlightStayEstimate({ destination }: { destination: string }) {

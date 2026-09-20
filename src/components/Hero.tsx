@@ -39,7 +39,7 @@ export function Hero() {
         </h1>
 
         <p className="mt-5 max-w-xl text-lg text-white/85">
-          Traveler connects experienced trip leaders with followers who want to join real,
+          Resentravel connects experienced trip leaders with followers who want to join real,
           day-by-day mountain itineraries. Leaders publish for free — followers pay only to join.
         </p>
 
@@ -78,14 +78,14 @@ const steps = [
   {
     icon: Wallet,
     title: 'Transparent 5% commission',
-    body: "Followers see the leader's fee and Traveler's 5% platform fee separately at checkout. No hidden extras.",
+    body: "Followers see the leader's fee and Resentravel's 5% platform fee separately at checkout. No hidden extras.",
   },
 ];
 
 export function HowItWorks() {
   return (
     <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-      <h2 className="font-display text-3xl font-bold text-foreground">How Traveler works</h2>
+      <h2 className="font-display text-3xl font-bold text-foreground">How Resentravel works</h2>
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-3">
         {steps.map((step) => (
           <div key={step.title} className="rounded-lg border border-border bg-card p-6">

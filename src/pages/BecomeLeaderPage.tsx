@@ -8,7 +8,7 @@ import { useAuth } from '@/lib/auth';
 const perks = [
   { icon: Map, text: 'Publish a day-by-day itinerary for free — no listing fees.' },
   { icon: Compass, text: 'Set your own price per follower and a follower cap.' },
-  { icon: Wallet, text: 'Traveler takes a transparent 5% platform fee, shown at checkout — nothing hidden.' },
+  { icon: Wallet, text: 'Resentravel takes a transparent 5% platform fee, shown at checkout — nothing hidden.' },
 ];
 
 export function BecomeLeaderPage() {
@@ -19,7 +19,7 @@ export function BecomeLeaderPage() {
       <h1 className="font-display text-4xl font-bold text-foreground">Lead your own trip</h1>
       <p className="mt-3 text-muted-foreground">
         Turn a route you know well into a trip others can join. Publish the itinerary, set your
-        price, and Traveler handles the rest.
+        price, and Resentravel handles the rest.
       </p>
 
       <div className="mt-8 space-y-3 text-left">

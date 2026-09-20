@@ -38,7 +38,7 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-border py-4 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} Traveler. Platform commission 5%, always shown at checkout.
+        © {new Date().getFullYear()} Resentravel. Platform commission 5%, always shown at checkout.
       </div>
     </footer>
   );
