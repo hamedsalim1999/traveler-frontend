@@ -1,6 +1,6 @@
-// Mirrors the schemas in traveler-backend's docs/swagger.json.
+// Mirrors the schemas in Resentravel-backend's docs/swagger.json.
 
-export type ProfileType = 'traveler' | 'leader' | 'both';
+export type ProfileType = 'Resentravel' | 'leader' | 'both';
 export type ExperienceLevel = 'beginner' | 'medium' | 'expert';
 
 export interface Place {

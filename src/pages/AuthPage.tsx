@@ -23,7 +23,7 @@ export function AuthPage() {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [type, setType] = useState<ProfileType>(
-    searchParams.get('type') === 'leader' ? 'leader' : 'traveler',
+    searchParams.get('type') === 'leader' ? 'leader' : 'Resentravel',
   );
   const [bio, setBio] = useState('');
   const [pending, setPending] = useState(false);
@@ -58,7 +58,7 @@ export function AuthPage() {
           <p className="mt-1 text-sm text-muted-foreground">
             {mode === 'login'
               ? 'Sign in to manage your trips and bookings.'
-              : 'One account, both roles — traveler, leader, or both.'}
+              : 'One account, both roles — Resentravel, leader, or both.'}
           </p>
         </div>
 
@@ -95,7 +95,7 @@ export function AuthPage() {
               <div>
                 <Label htmlFor="auth-type">I am a…</Label>
                 <Select id="auth-type" value={type} onChange={(e) => setType(e.target.value as ProfileType)}>
-                  <option value="traveler">Follower — I want to join trips</option>
+                  <option value="Resentravel">Follower — I want to join trips</option>
                   <option value="leader">Leader — I want to publish trips</option>
                   <option value="both">Both</option>
                 </Select>

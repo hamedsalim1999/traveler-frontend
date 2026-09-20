@@ -31,12 +31,12 @@ export function CreateTripPage() {
   }
   if (!profile) return null;
 
-  if (profile.type === 'traveler') {
+  if (profile.type === 'Resentravel') {
     return (
       <div className="mx-auto max-w-md px-4 py-16 text-center sm:px-6">
         <h1 className="font-display text-2xl font-bold text-foreground">Become a leader first</h1>
         <p className="mt-2 text-muted-foreground">
-          Your profile is set to "traveler". Switch it to "leader" or "both" from your profile
+          Your profile is set to "Resentravel". Switch it to "leader" or "both" from your profile
           page to publish a trip.
         </p>
         <Button className="mt-6" onClick={() => navigate(`/profiles/${profile.id}`)}>

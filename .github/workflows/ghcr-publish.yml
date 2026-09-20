@@ -1,7 +1,7 @@
 name: Publish to GHCR
 
 # Builds this repo's Dockerfile and pushes it to GitHub Container Registry
-# (ghcr.io/<owner>/traveler-frontend). The image serves the static build via
+# (ghcr.io/<owner>/resentravel-frontend). The image serves the static build via
 # nginx; point it at a backend by setting API_URL at container start (see
 # README.md) — no rebuild needed per environment.
 

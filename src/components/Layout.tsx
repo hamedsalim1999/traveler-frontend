@@ -31,7 +31,7 @@ export function Layout() {
           <div className="flex items-center gap-3">
             {profile ? (
               <>
-                {profile.type !== 'traveler' && (
+                {profile.type !== 'Resentravel' && (
                   <Link
                     to="/trips/new"
                     className="hidden items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground sm:flex"

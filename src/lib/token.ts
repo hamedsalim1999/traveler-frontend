@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'traveler.token';
+const STORAGE_KEY = 'Resentravel.token';
 
 let current: string | null = null;
 try {

@@ -1,7 +1,7 @@
-# traveler-frontend
+# resentravel-frontend
 
-React (Vite + TypeScript + Tailwind CSS) frontend for a leader-led trip
-marketplace, talking to [traveler-backend](../traveler-backend)'s API —
+React (Vite + TypeScript + Tailwind CSS) frontend for Resentravel, a
+leader-led trip marketplace, talking to [traveler-backend](../traveler-backend)'s API —
 see `http://127.0.0.1:8080/swagger/index.html` for the full spec. Visual
 design and product structure are modeled on a Lovable prototype
 (trip-trail-connect): a violet-to-blue gradient hero, real accounts,
@@ -85,8 +85,8 @@ container-specific, so both hosting paths stay compatible from one build.
 ## Production
 
 ```bash
-docker build -t <account>.dkr.ecr.<region>.amazonaws.com/traveler-frontend:<tag> .
-docker push <account>.dkr.ecr.<region>.amazonaws.com/traveler-frontend:<tag>
+docker build -t <account>.dkr.ecr.<region>.amazonaws.com/resentravel-frontend:<tag> .
+docker push <account>.dkr.ecr.<region>.amazonaws.com/resentravel-frontend:<tag>
 ```
 
 Deploy to EKS with `API_URL` set to the backend's URL in the pod's
